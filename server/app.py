@@ -4,6 +4,8 @@ from schemas import ImpressionEvent, ClickEvent
 from store import InMemoryStore
 from model import OnlineModel
 from fastapi.middleware.cors import CORSMiddleware
+from google_suggest_seeder import load_cache, save_cache, fetch_google_suggestions,seed_google_suggestions
+from datetime import datetime, timezone
 import trainer
 
 app = FastAPI()
@@ -30,7 +32,7 @@ def on_startup():
     # Start background trainer with references to store and model
     trainer.start_trainer(store, model)
 
-    # ---- SEED INITIAL KEYWORDS ----
+    # ---- SEED STATIC KNOWN QUERIES ----
     initial_queries = [
         "leave policy",
         "leave application form",
@@ -53,15 +55,26 @@ def on_startup():
         "project guidelines",
         "company handbook",
     ]
-
     for q in initial_queries:
         store.add_query(q, increment=5)
+
+    # ---- SEED GOOGLE SUGGESTIONS ----
+    seed_google_suggestions(
+        store,
+        prefixes=["leave", "salary", "policy", "how to", "request", "id card"],
+        increment=2,
+        ttl_days=7,
+        max_size=1000
+    )
 
 @app.get('/suggest')
 def suggest(prefix: str = '', k: int = 10):
     candidates = store.get_prefix_candidates(prefix, limit=50) if prefix else store.get_top_n(limit=50)
     if not candidates:
-        return {"suggestions": []}
+        google_suggestions = fetch_google_suggestions(prefix)
+        for s in google_suggestions:
+            store.add_query(s, increment=1)
+        candidates = google_suggestions
     pairs = model.score_candidates(prefix, candidates, store)
     top = pairs[:k]
     return {"suggestions": [{"text": p, "score": float(s)} for p, s in top]}
