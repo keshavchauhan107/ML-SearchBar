@@ -1,0 +1,28 @@
+<div class="relative w-full max-w-xl mx-auto  mt-10">
+  <input
+    type="text"
+    [formControl]="searchControl"
+    (blur)="onBlur()"
+    placeholder="Search..."
+    class="w-full rounded-xl border border-slate-600 bg-slate-900/70 text-white
+           px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+  />
+
+  <!-- Suggestions dropdown -->
+  <div
+    *ngIf="isOpen && suggestions.length > 0"
+    class="absolute mt-1 w-full bg-slate-800 border border-slate-700 rounded-xl
+           shadow-lg max-h-72 overflow-y-auto z-20"
+  >
+    <button
+      *ngFor="let s of suggestions"
+      type="button"
+      (mousedown)="onSuggestionClick(s)"
+      class="w-full text-left px-4 py-2 text-sm text-slate-100 hover:bg-slate-700
+             flex items-center justify-between"
+    >
+      <span>{{ s.text }}</span>
+      <span class="text-[10px] text-slate-500">score: {{ s.score | number:'1.2-2' }}</span>
+    </button>
+  </div>
+</div>

@@ -1,48 +1,39 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# === Client (Angular frontend) ===
+/client/node_modules/
+/client/dist/
+/client/build/
+/client/out-tsc/
+/client/.angular/
+/client/.angular/cache/
+/client/.sass-cache/
+/client/coverage/
+/client/npm-debug.log
+/client/yarn-error.log
+/client/.env
+/client/.env.*.local
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# === Server (Python backend) ===
+/server/.venv/
+/server/venv/
+/server/__pycache__/
+/server/*.py[cod]
+/server/*.pyc
+/server/.pytest_cache/
+/server/.mypy_cache/
+/server/.env
+/server/.env.*.local
+/server/instance/
+/server/*.sqlite3
+/server/pip-wheel-metadata/
+/server/*.egg-info/
+/server/build/
+/server/dist/
+/server/__pycache__/
+/server/cache/
 
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
-
-# IDEs and editors
+# === Common editor / OS files ===
+.vscode/
 .idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
 *.sublime-workspace
-
-# Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
-
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-__screenshots__/
-
-# System files
 .DS_Store
 Thumbs.db
-
-#Backend
-/server/.venv
-/server/__pycache__/
-/server/cache
